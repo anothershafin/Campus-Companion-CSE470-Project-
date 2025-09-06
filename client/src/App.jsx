@@ -14,6 +14,7 @@ import ProtectedRoute from './components/ProtectedRoute.jsx'
 import ResourceDetail from './pages/ResourceDetail.jsx'
 import ResourcesManage from './pages/ResourcesManage.jsx'
 import ProfileEdit from './pages/ProfileEdit.jsx'
+import Score from './pages/Score.jsx'
 
 function Navbar() {
   const [authed, setAuthed] = React.useState(!!localStorage.getItem('token'))
@@ -43,6 +44,7 @@ function Navbar() {
         {authed && <Link to="/deadlines">Deadlines</Link>}
         {authed && <Link to="/kanban">Kanban</Link>}
         {authed && <Link to="/todo">To-Do</Link>}
+        {authed && <Link to="/score">Score</Link>}
         <div style={{ marginLeft: 'auto' }} />
         {!authed && <Link to="/login" className="btn">Login</Link>}
         {!authed && <Link to="/register" className="btn secondary">Register</Link>}
@@ -75,6 +77,7 @@ export default function App() {
             <Route path="/profile/edit" element={<ProfileEdit/>} />
             <Route path="/resources/:id" element={<ResourceDetail/>} />
             <Route path="/resources/manage" element={<ResourcesManage/>} />
+            <Route path="/score" element={<Score/>} />
           </Route>
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
