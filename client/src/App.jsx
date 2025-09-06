@@ -15,20 +15,23 @@ import ResourceDetail from './pages/ResourceDetail.jsx'
 import ResourcesManage from './pages/ResourcesManage.jsx'
 
 function Navbar() {
-
   const [authed, setAuthed] = React.useState(!!localStorage.getItem('token'))
 
   React.useEffect(() => {
     const onAuthChanged = () => setAuthed(!!localStorage.getItem('token'))
-
     window.addEventListener('auth-changed', onAuthChanged)
-
     window.addEventListener('storage', onAuthChanged)
     return () => {
       window.removeEventListener('auth-changed', onAuthChanged)
       window.removeEventListener('storage', onAuthChanged)
     }
   }, [])
+
+  function logout() {
+    localStorage.clear()
+    window.dispatchEvent(new Event('auth-changed'))
+    window.location.href = '/'
+  }
 
   return (
     <div className="nav">
@@ -39,14 +42,16 @@ function Navbar() {
         {authed && <Link to="/deadlines">Deadlines</Link>}
         {authed && <Link to="/kanban">Kanban</Link>}
         {authed && <Link to="/todo">To-Do</Link>}
-        <div style={{marginLeft:'auto'}}/>
+        <div style={{ marginLeft: 'auto' }} />
         {!authed && <Link to="/login" className="btn">Login</Link>}
         {!authed && <Link to="/register" className="btn secondary">Register</Link>}
-        {authed && <Link to="/profile" className="btn secondary">Profile</Link>}
+        {authed && <Link to="/profile" className="btn secondary" style={{ marginRight: 8 }}>Profile</Link>}
+        {authed && <button className="btn" onClick={logout}>Logout</button>}
       </div>
     </div>
   )
 }
+
 
 
 export default function App() {
