@@ -8,7 +8,8 @@ export const createFolder = async (req, res) => {
 };
 
 export const myFolders = async (req, res) => {
-  const folders = await Folder.find({ $or: [{ owner: req.user._id }, { collaborators: req.user._id }] })
+  // only folders where YOU are the owner
+  const folders = await Folder.find({ owner: req.user._id })
     .sort({ updatedAt: -1 });
   res.json(folders);
 };

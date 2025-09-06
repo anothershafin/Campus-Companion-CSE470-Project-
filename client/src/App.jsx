@@ -11,6 +11,8 @@ import Kanban from './pages/Kanban.jsx'
 import Todo from './pages/Todo.jsx'
 import Profile from './pages/Profile.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
+import ResourceDetail from './pages/ResourceDetail.jsx'
+import ResourcesManage from './pages/ResourcesManage.jsx'
 
 function Navbar() {
 
@@ -64,6 +66,8 @@ export default function App() {
             <Route path="/kanban" element={<Kanban/>} />
             <Route path="/todo" element={<Todo/>} />
             <Route path="/profile" element={<Profile/>} />
+            <Route path="/resources/:id" element={<ResourceDetail/>} />
+            <Route path="/resources/manage" element={<ResourcesManage/>} />
           </Route>
           <Route path="*" element={<Navigate to="/" />} />
         </Routes>
