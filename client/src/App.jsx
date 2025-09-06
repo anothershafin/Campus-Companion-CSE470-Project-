@@ -13,6 +13,7 @@ import Profile from './pages/Profile.jsx'
 import ProtectedRoute from './components/ProtectedRoute.jsx'
 import ResourceDetail from './pages/ResourceDetail.jsx'
 import ResourcesManage from './pages/ResourcesManage.jsx'
+import ProfileEdit from './pages/ProfileEdit.jsx'
 
 function Navbar() {
   const [authed, setAuthed] = React.useState(!!localStorage.getItem('token'))
@@ -71,6 +72,7 @@ export default function App() {
             <Route path="/kanban" element={<Kanban/>} />
             <Route path="/todo" element={<Todo/>} />
             <Route path="/profile" element={<Profile/>} />
+            <Route path="/profile/edit" element={<ProfileEdit/>} />
             <Route path="/resources/:id" element={<ResourceDetail/>} />
             <Route path="/resources/manage" element={<ResourcesManage/>} />
           </Route>

@@ -7,7 +7,12 @@ const userSchema = new mongoose.Schema({
   password: { type: String, required: true },
   isVerified: { type: Boolean, default: false },
   otpCode: { type: String },
-  otpExpires: { type: Date }
+  otpExpires: { type: Date },
+
+  // NEW FIELDS
+  university: { type: String },
+  phone: { type: String },
+  avatarUrl: { type: String }
 }, { timestamps: true });
 
 userSchema.pre('save', async function(next) {

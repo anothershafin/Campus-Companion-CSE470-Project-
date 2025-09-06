@@ -81,3 +81,16 @@ export const login = async (req, res) => {
 export const me = async (req, res) => {
   res.json({ user: req.user });
 };
+
+export const updateMe = async (req, res) => {
+  const { name, university, phone } = req.body;
+  if (typeof name !== 'undefined') req.user.name = name;
+  if (typeof university !== 'undefined') req.user.university = university;
+  if (typeof phone !== 'undefined') req.user.phone = phone;
+  if (req.file) {
+    req.user.avatarUrl = `/uploads/${req.file.filename}`;
+  }
+  await req.user.save();
+  res.json({ user: req.user });
+};
+
