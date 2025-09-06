@@ -1,6 +1,7 @@
 import React from 'react'
-import { api } from '../api.js'
+import {api} from '../api.js'
 import RatingStars from '../components/RatingStars.jsx'
+import {Link} from 'react-router-dom'
 
 export default function Explore() {
   const token = localStorage.getItem('token')
@@ -28,15 +29,33 @@ export default function Explore() {
         </div>
         <button className="btn" onClick={search}>Search</button>
       </div>
-      <div className="grid cols-3" style={{marginTop:16}}>
-        {items.map(f => (
-          <div key={f._id} className="card">
-            <b>{f.name}</b>
-            <div className="small">{f.tags?.join(', ')}</div>
-            <div style={{marginTop:6}}><RatingStars value={Math.round(f.avgRating)} onChange={(s)=>rate(f._id, s)}/></div>
-          </div>
-        ))}
+<div className="grid cols-3" style={{marginTop:16}}>
+  {items.map(f => (
+    <Link
+      key={f._id}
+      to={`/resources/${f._id}`}         // click → detail page
+      className="card"
+      style={{ display:'block', cursor:'pointer' }}
+      title="Open folder"
+    >
+      <b>{f.name}</b>
+      {f.description && <div className="small" style={{marginTop:6}}>{f.description}</div>}
+      <div className="small" style={{marginTop:6}}>{f.tags?.join(', ')}</div>
+
+      {/* keep rating clicks without navigating */}
+      <div
+        style={{marginTop:6}}
+        onClick={(e)=>{ e.preventDefault(); e.stopPropagation(); }}
+      >
+        <RatingStars
+          value={Math.round(f.avgRating || 0)}
+          onChange={(s)=>rate(f._id, s)}
+        />
       </div>
+    </Link>
+  ))}
+</div>
+
     </div>
   )
 }
