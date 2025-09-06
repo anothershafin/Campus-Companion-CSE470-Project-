@@ -1,6 +1,7 @@
 import React from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { api } from '../api.js'
+import RatingStars from '../components/RatingStars.jsx'
 
 export default function ResourceDetail() {
   const token = localStorage.getItem('token')
@@ -14,18 +15,21 @@ export default function ResourceDetail() {
     try {
       const data = await api(`/folders/${id}`, { token })
       setFolder(data.folder)
-      setNotes(data.notes)
-    } catch (e) {
-      console.error(e)
-      alert('Failed to load folder')
+      setNotes(data.notes || [])
     } finally {
       setLoading(false)
     }
   }
   React.useEffect(()=>{ load() }, [id])
 
+  async function submitRating(stars) {
+    if (!token) return alert('Login to rate')
+    await api('/ratings', { method: 'POST', token, body: { folderId: id, stars } })
+    await load() // refresh avg + count after rating
+  }
+
   if (loading) return <div className="card">Loading…</div>
-  if (!folder) return <div className="card">Folder not found.</div>
+  if (!folder) return <div className="card">Not found</div>
 
   return (
     <div>
@@ -37,15 +41,24 @@ export default function ResourceDetail() {
             {folder.tags?.length > 0 && (
               <div className="small" style={{marginTop:6}}>Tags: {folder.tags.join(', ')}</div>
             )}
+            <div className="small" style={{marginTop:10}}>
+              Average rating: <b>{(folder.avgRating ?? 0).toFixed(1)}</b>{' '}
+              <span style={{opacity:0.8}}>({folder.ratingCount ?? 0} rating{(folder.ratingCount ?? 0)===1 ? '' : 's'})</span>
+            </div>
+            <div className="small" style={{marginTop:8}}>
+              Rate: <span style={{fontSize:22, marginLeft:6}}>
+                <RatingStars value={0} onChange={submitRating} />
+              </span>
+            </div>
           </div>
           <Link to="/resources" className="btn secondary">← Back to My Folders</Link>
         </div>
       </div>
 
       {notes.length === 0 ? (
-        <div className="card"><b>Empty Folder</b><div className="small">No notes yet.</div></div>
+        <div className="card">Empty Folder<br/><span className="small">No notes yet.</span></div>
       ) : (
-        <div className="grid">
+        <div className="grid cols-2">
           {notes.map(n => (
             <div key={n._id} className="card">
               <div style={{fontWeight:700}}>Note: {n.title}</div>

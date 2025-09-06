@@ -1,7 +1,6 @@
 import React from 'react'
 import { api } from '../api.js'
 import { Link } from 'react-router-dom'
-import RatingStars from '../components/RatingStars.jsx'
 
 export default function Resources() {
   const token = localStorage.getItem('token')
@@ -15,37 +14,33 @@ export default function Resources() {
 
   return (
     <div>
-      <div className="card" style={{marginBottom:16}}>
-        <b>My Folders</b>
-        <p className="small">Only folders you created. Click any card to view its notes.</p>
+      <div className="card">
+        <div style={{display:'flex', justifyContent:'space-between', alignItems:'center'}}>
+          <div>
+            <div style={{fontWeight:800, fontSize:20}}>My Folders</div>
+            <div className="small" style={{marginTop:6}}>Only folders you created. Click any card to view its notes.</div>
+          </div>
+          <Link className="btn" to="/resources/manage">Add New Folder / Notes</Link>
+        </div>
       </div>
 
-      <div className="grid cols-3">
+      <div className="grid cols-3" style={{marginTop:16}}>
         {folders.map(f => (
-          <Link key={f._id} to={`/resources/${f._id}`} className="card" style={{display:'block'}}>
-            <div style={{display:'flex', justifyContent:'space-between', alignItems:'start', gap:8}}>
-              <div>
-                <div style={{fontWeight:800}}>{f.name}</div>
-                {f.description && <div className="small" style={{marginTop:6}}>{f.description}</div>}
-                {f.tags?.length > 0 && (
-                  <div className="small" style={{marginTop:6}}>Tags: {f.tags.join(', ')}</div>
-                )}
-                <div className="small" style={{marginTop:6}}>Visibility: {f.visibility?.toUpperCase()}</div>
-              </div>
-              <div>
-                <RatingStars value={Math.round(f.avgRating||0)} />
-                <div className="small" style={{textAlign:'right'}}>{f.ratingCount||0} rating(s)</div>
-              </div>
+          <Link key={f._id} className="card" to={`/resources/${f._id}`}>
+            <div style={{fontWeight:800, fontSize:20}}>{f.name}</div>
+            {f.description && <div className="small" style={{marginTop:6}}>{f.description}</div>}
+            <div className="small" style={{marginTop:6}}>Tags: {f.tags?.length ? f.tags.join(', ') : '—'}</div>
+            <div className="small" style={{marginTop:10, opacity:0.9}}>
+              Avg rating: <b>{(f.avgRating ?? 0).toFixed(1)}</b>{' '}
+              <span style={{opacity:0.7}}>({f.ratingCount ?? 0} rating{(f.ratingCount ?? 0)===1 ? '' : 's'})</span>
             </div>
+            <div className="small" style={{marginTop:6}}>Visibility: {f.visibility?.toUpperCase()}</div>
           </Link>
         ))}
 
         {folders.length === 0 && (
           <div className="card">You have no folders yet.</div>
         )}
-      </div>
-      <div style={{ textAlign: 'center', marginTop: 24 }}>
-  <Link to="/resources/manage" className="btn">Add New Folder / Notes</Link>
       </div>
     </div>
   )
